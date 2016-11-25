@@ -34,7 +34,7 @@ gulp --archiver zip
 Default: tar.gz
 
 ### Exclude Files and Directories
-Exclude a directory. Uses glob syntax.
+Exclude a file or directory. Uses glob syntax.
 
 Exclude all node_modules directories
 ```ssh
