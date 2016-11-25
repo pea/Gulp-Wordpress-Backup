@@ -45,3 +45,10 @@ Exclude /node_modules and /wp-content/themes/mytheme/vendor
 ```ssh
 gulp --excludeDir node_modules --excludeDir wp-content/themes/mytheme/vendor
 ```
+
+## Restoring Files
+To extract and overwrite existing files.
+### Extract tar.gz
+```ssh
+tar -xvzf path/to/files.tar.gz -C path/to/wordpress/root
+```
