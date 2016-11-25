@@ -11,20 +11,99 @@ var zip = require('gulp-zip');
 var gzip = require('gulp-gzip');
 var tar = require('gulp-tar');
 var _ = require('underscore');
-var globule = require('globule');
+var prompt = require('gulp-prompt');
+var inquirer = require('inquirer');
 
 var argv = require('yargs')
     .default('oldDomain', '')
     .default('newDomain', '')
-    .default('archiver', 'tar')
+    .default('archiver', 'tar.gz')
     .array('exclude')
     .argv
     
 var dir = dt.format('m-d-y_H.M.S');
 
+var options = {};
+
 RegExp.escape = function(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
+
+/**
+ * Optional Prompt
+ */
+gulp.task('prompt', () => {
+
+    if (!argv.interactive) {
+        options = argv;
+        return;
+    }
+
+    const question = [
+        {
+            type : 'input',
+            name : 'archiver',
+            message : 'Compress with zip or tar.gz?',
+            default : 'tar.gz'
+        },
+        {
+            type : 'input',
+            name : 'dbhost',
+            message : 'Database host',
+            default : 'localhost'
+        },
+        {
+            type : 'input',
+            name : 'dbuser',
+            message : 'Database username',
+            default : 'root'
+        },
+        {
+            type : 'input',
+            name : 'dbpass',
+            message : 'Database password',
+            default : 'password'
+        },
+        {
+            type : 'input',
+            name : 'dbdatabase',
+            message : 'Database name',
+            default : 'wordpress'
+        },
+        {
+            type : 'input',
+            name : 'oldDomain',
+            message : 'Name of old domain to replace',
+            default : 'localhost'
+        },
+        {
+            type : 'input',
+            name : 'newDomain',
+            message : 'Name of new domain to replace with',
+            default : 'mywebsite.com'
+        },
+        {
+            type : 'input',
+            name : 'exclude',
+            message : 'Items to exclude (seperate by spaces)',
+            default : false
+        }
+    ];
+
+    return inquirer.prompt(question).then(answer => {
+        options.archiver = answer.archiver;
+        options.dbhost = answer.dbhost;
+        options.dbuser = answer.dbuser;
+        options.dbpass = answer.dbpass;
+        options.dbdatabase = answer.dbdatabase;
+        options.oldDomain = answer.oldDomain;
+        options.newDomain = answer.newDomain;
+
+        if (answer.exclude != false) {
+            options.exclude = answer.exclude.split(' ');
+        }
+    });
+});
 
 /**
  * Setup directory structure
@@ -39,13 +118,14 @@ gulp.task('setup', () => {
  * Archive files, excluding vendors
  */
 gulp.task('archiveFiles', () => {
+
     var srcFiles = [
         '../**',
         '!../exports', '!../exports/**'
     ];
 
-    if (!!argv.exclude) {
-        _.each(argv.exclude, (item) => {
+    if (!!options.exclude) {
+        _.each(options.exclude, (item) => {
             srcFiles.push(
                 '!../' + item
             );
@@ -58,13 +138,13 @@ gulp.task('archiveFiles', () => {
         });
     }
 
-    if (argv.archiver == 'zip') {
+    if (options.archiver == 'zip') {
         return gulp.src(srcFiles)
             .pipe(zip('files.zip'))
             .pipe(gulp.dest('./' + dir));
     }
 
-    if (argv.archiver == 'tar') {
+    if (options.archiver == 'tar.gz') {
         return gulp.src(srcFiles)
             .pipe(tar('files.tar'))
             .pipe(gzip())
@@ -76,13 +156,14 @@ gulp.task('archiveFiles', () => {
  * Dump the database into /tmp, replace the domains and move to /
  */
 gulp.task('dumpDatabase', () => {
+
     var dumpPath = './' + dir + '/tmp/database.sql';
     return new Promise((resolve,reject) => {
         mysqlDump({
-            host: argv.dbhost,
-            user: argv.dbuser,
-            password: argv.dbpass,
-            database: argv.dbdatabase,
+            host: options.dbhost,
+            user: options.dbuser,
+            password: options.dbpass,
+            database: options.dbdatabase,
             dest: dumpPath 
         }, (err) => {
             if(err !== null) return reject(err);
@@ -92,7 +173,7 @@ gulp.task('dumpDatabase', () => {
     .then((err,res) => {
         if(err !== null);
         return gulp.src([dumpPath])
-            .pipe(replace(RegExp.escape(argv.oldDomain), argv.newDomain))
+            .pipe(replace(RegExp.escape(options.oldDomain), options.newDomain))
             .pipe(gulp.dest('./' + dir));
     });
 });
@@ -105,6 +186,7 @@ gulp.task('clearUp', () => {
 });
 
 gulp.task('default', gulpSequence(
+    'prompt',
     'setup',
     'archiveFiles',
     'dumpDatabase',

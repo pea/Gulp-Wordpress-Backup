@@ -11,8 +11,13 @@ gulp --dbhost <hostname> --dbuser <database username> --dbpass <database passwor
 ```
 
 Example:
-```sssh
+```ssh
 gulp --dbhost localhost --dbuser wordpress --dbpass wordpress --dbdatabase wordpress --excludeDir ../wp-content/themes/mytheme/vendor/ --excludeDir ../wp-content/themes/mytheme/node_modules/ --oldDomain localhost --newDomain mywebsite.com
+```
+
+Alternatively you can run the prompt which will walk you through the configuration. Just execute:
+```ssh
+gulp --interactive
 ```
 
 `exports/` will populate with the backup - an sql dump and an archive of the files.
