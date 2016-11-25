@@ -29,7 +29,7 @@ gulp --oldDomain localhost --newDomain mywebsite.com
 ### Archiver Option
 Choose the archiver to use whem compressing the files. You have the option of zip and tar.gz. Zip can have problems with symlinks. If unzipping is failing use tar.gz.
 ```ssh
-gulp --archive zip
+gulp --archiver zip
 ```
 Default: tar.gz
 
