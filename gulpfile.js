@@ -30,8 +30,11 @@ RegExp.escape = function(s) {
  * Setup directory structure
  */
 gulp.task('setup', () => {
-    return mkdirp('./' + dir + '/tmp', (err) => {
+    return mkdirp('./exports/' + dir + '/tmp', (err) => {
         if (err) throw err;
+        fs.writeFile('./exports/.htaccess', 'deny from all', function (err) {
+          if (err) return console.log(err);
+        });
     });
 });
 
@@ -40,8 +43,8 @@ gulp.task('setup', () => {
  */
 gulp.task('archiveFiles', () => {
     var srcFiles = [
-        '../**',
-        '!../exports', '!../exports/**'
+        '**',
+        '!./exports/**'
     ];
 
     if (!!argv.excludeDir) {
@@ -58,14 +61,14 @@ gulp.task('archiveFiles', () => {
     if (argv.archiver == 'zip') {
         return gulp.src(srcFiles, {base: './'})
             .pipe(zip('files.zip'))
-            .pipe(gulp.dest('./' + dir));
+            .pipe(gulp.dest('./exports/' + dir));
     }
 
     if (argv.archiver == 'tar') {
         return gulp.src(srcFiles)
             .pipe(tar('files.tar'))
             .pipe(gzip())
-            .pipe(gulp.dest('./' + dir));
+            .pipe(gulp.dest('./exports/' + dir));
     }
 });
 
@@ -73,7 +76,7 @@ gulp.task('archiveFiles', () => {
  * Dump the database into /tmp, replace the domains and move to /
  */
 gulp.task('dumpDatabase', () => {
-    var dumpPath = './' + dir + '/tmp/database.sql';
+    var dumpPath = './exports/' + dir + '/tmp/database.sql';
     return new Promise((resolve,reject) => {
         mysqlDump({
             host: argv.dbhost,
@@ -90,7 +93,7 @@ gulp.task('dumpDatabase', () => {
         if(err !== null);
         return gulp.src([dumpPath])
             .pipe(replace(RegExp.escape(argv.oldDomain), argv.newDomain))
-            .pipe(gulp.dest('./' + dir));
+            .pipe(gulp.dest('./exports/' + dir));
     });
 });
 
@@ -98,7 +101,7 @@ gulp.task('dumpDatabase', () => {
  * Delete /temp
  */
 gulp.task('clearUp', () => {
-    del(['./' + dir + '/tmp/']);
+    del(['./exports/' + dir + '/tmp/']);
 });
 
 gulp.task('default', gulpSequence(
