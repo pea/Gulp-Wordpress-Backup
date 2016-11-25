@@ -10,11 +10,6 @@ Gulpfile to backup a Wordpress installation for migration.
 gulp --dbhost <hostname> --dbuser <database username> --dbpass <database password> --dbdatabase <database name>
 ```
 
-Example:
-```ssh
-gulp --dbhost localhost --dbuser wordpress --dbpass wordpress --dbdatabase wordpress --exclude ../wp-content/themes/mytheme/vendor/ --exclude ../wp-content/themes/mytheme/node_modules/ --oldDomain localhost --newDomain mywebsite.com
-```
-
 Alternatively you can run the prompt which will walk you through the configuration. Just execute:
 ```ssh
 gulp --interactive
