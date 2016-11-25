@@ -47,6 +47,10 @@ gulp --excludeDir node_modules --excludeDir wp-content/themes/mytheme/vendor
 ```
 
 ## Restoring Files
+Upload tar.gz
+```ssh
+scp <file to upload> <username>@<hostname>:<destination path>
+```
 To extract and overwrite existing files.
 ### Extract tar.gz
 ```ssh
