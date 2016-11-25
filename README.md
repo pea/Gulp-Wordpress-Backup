@@ -33,17 +33,22 @@ gulp --archiver zip
 ```
 Default: tar.gz
 
-### Exclude Directories
+### Exclude Files and Directories
 Exclude a directory. Uses glob syntax.
 
 Exclude all node_modules directories
 ```ssh
-gulp --excludeDir **/node_modules
+gulp --exclude **/node_modules
 ```
 
 Exclude /node_modules and /wp-content/themes/mytheme/vendor
 ```ssh
-gulp --excludeDir node_modules --excludeDir wp-content/themes/mytheme/vendor
+gulp --exclude node_modules --exclude wp-content/themes/mytheme/vendor
+```
+
+Exclude wp-config.php
+```ssh
+gulp --exclude wp-config.php
 ```
 
 ## Restoring Files

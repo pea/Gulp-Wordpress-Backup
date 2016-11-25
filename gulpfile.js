@@ -17,7 +17,7 @@ var argv = require('yargs')
     .default('oldDomain', '')
     .default('newDomain', '')
     .default('archiver', 'tar')
-    .array('excludeDir')
+    .array('exclude')
     .argv
     
 var dir = dt.format('m-d-y_H.M.S');
@@ -30,11 +30,8 @@ RegExp.escape = function(s) {
  * Setup directory structure
  */
 gulp.task('setup', () => {
-    return mkdirp('./exports/' + dir + '/tmp', (err) => {
+    return mkdirp('./' + dir + '/tmp', (err) => {
         if (err) throw err;
-        fs.writeFile('./exports/.htaccess', 'deny from all', function (err) {
-          if (err) return console.log(err);
-        });
     });
 });
 
@@ -43,32 +40,35 @@ gulp.task('setup', () => {
  */
 gulp.task('archiveFiles', () => {
     var srcFiles = [
-        '**',
-        '!./exports/**'
+        '../**',
+        '!../exports', '!../exports/**'
     ];
 
-    if (!!argv.excludeDir) {
-        _.each(argv.excludeDir, (dir) => {
-
-            var files = globule.find('**/' + dir);
-
+    if (!!argv.exclude) {
+        _.each(argv.exclude, (item) => {
             srcFiles.push(
-                '!' + dir, '!' + dir + '/**'
+                '!../' + item
             );
+
+            if (fs.lstatSync('../' + item).isDirectory()) {
+                srcFiles.push(
+                    '!../' + item + '/**'
+                );
+            }
         });
     }
 
     if (argv.archiver == 'zip') {
-        return gulp.src(srcFiles, {base: './'})
+        return gulp.src(srcFiles)
             .pipe(zip('files.zip'))
-            .pipe(gulp.dest('./exports/' + dir));
+            .pipe(gulp.dest('./' + dir));
     }
 
     if (argv.archiver == 'tar') {
         return gulp.src(srcFiles)
             .pipe(tar('files.tar'))
             .pipe(gzip())
-            .pipe(gulp.dest('./exports/' + dir));
+            .pipe(gulp.dest('./' + dir));
     }
 });
 
@@ -76,7 +76,7 @@ gulp.task('archiveFiles', () => {
  * Dump the database into /tmp, replace the domains and move to /
  */
 gulp.task('dumpDatabase', () => {
-    var dumpPath = './exports/' + dir + '/tmp/database.sql';
+    var dumpPath = './' + dir + '/tmp/database.sql';
     return new Promise((resolve,reject) => {
         mysqlDump({
             host: argv.dbhost,
@@ -93,7 +93,7 @@ gulp.task('dumpDatabase', () => {
         if(err !== null);
         return gulp.src([dumpPath])
             .pipe(replace(RegExp.escape(argv.oldDomain), argv.newDomain))
-            .pipe(gulp.dest('./exports/' + dir));
+            .pipe(gulp.dest('./' + dir));
     });
 });
 
@@ -101,7 +101,7 @@ gulp.task('dumpDatabase', () => {
  * Delete /temp
  */
 gulp.task('clearUp', () => {
-    del(['./exports/' + dir + '/tmp/']);
+    del(['./' + dir + '/tmp/']);
 });
 
 gulp.task('default', gulpSequence(
