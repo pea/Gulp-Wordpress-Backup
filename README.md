@@ -12,7 +12,7 @@ gulp --dbhost <hostname> --dbuser <database username> --dbpass <database passwor
 
 Example:
 ```ssh
-gulp --dbhost localhost --dbuser wordpress --dbpass wordpress --dbdatabase wordpress --excludeDir ../wp-content/themes/mytheme/vendor/ --excludeDir ../wp-content/themes/mytheme/node_modules/ --oldDomain localhost --newDomain mywebsite.com
+gulp --dbhost localhost --dbuser wordpress --dbpass wordpress --dbdatabase wordpress --exclude ../wp-content/themes/mytheme/vendor/ --exclude ../wp-content/themes/mytheme/node_modules/ --oldDomain localhost --newDomain mywebsite.com
 ```
 
 Alternatively you can run the prompt which will walk you through the configuration. Just execute:
