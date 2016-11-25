@@ -41,11 +41,6 @@ Default: tar.gz
 ### Exclude Files and Directories
 Exclude a file or directory. Uses glob syntax.
 
-Exclude all node_modules directories
-```ssh
-gulp --exclude **/node_modules
-```
-
 Exclude /node_modules and /wp-content/themes/mytheme/vendor
 ```ssh
 gulp --exclude node_modules --exclude wp-content/themes/mytheme/vendor
