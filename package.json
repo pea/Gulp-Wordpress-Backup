@@ -1,0 +1,29 @@
+{
+  "name": "wordpress-backup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pea/Wordpress_Backup.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-gzip": "^1.4.0",
+    "gulp-replace": "^0.5.4",
+    "gulp-sequence": "^0.4.6",
+    "gulp-tar": "^1.9.0",
+    "gulp-zip": "^3.2.0",
+    "mkdirp": "^0.5.1",
+    "mysqldump": "^1.3.1",
+    "node-datetime": "^1.0.0",
+    "yargs": "^6.4.0"
+  }
+}
