@@ -2,16 +2,20 @@
 Gulpfile to backup a Wordpress installation for migration.
 
 ## Installation
-1. Copy gulpfile.js and package.json to Wordpress root
-2. Execute `npm install`
+1. Clone to /exports
+2. Execute `npm install` in /exports
 
 ## Usage
-Run:
 ```ssh
 gulp --dbhost <hostname> --dbuser <database username> --dbpass <database password> --dbdatabase <database name>
 ```
 
-`/exports` will be created in the Wordpress root containing the backup. The backup will contain an SQL dump and an archive of the files.
+Example:
+```sssh
+gulp --dbhost localhost --dbuser wordpress --dbpass wordpress --dbdatabase wordpress --excludeDir ../wp-content/themes/mytheme/vendor/ --excludeDir ../wp-content/themes/mytheme/node_modules/ --oldDomain localhost --newDomain mywebsite.com
+```
+
+`exports/` will populate with the backup - an sql dump and an archive of the files.
 
 To import the backup, create a database with the SQL dump, Configure wp-config.php and other configuration files.
 
