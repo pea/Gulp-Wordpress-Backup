@@ -90,17 +90,10 @@ gulp.task('prompt', () => {
         }
     ];
 
-    return inquirer.prompt(question).then(answer => {
-        options.archiver = answer.archiver;
-        options.dbhost = answer.dbhost;
-        options.dbuser = answer.dbuser;
-        options.dbpass = answer.dbpass;
-        options.dbdatabase = answer.dbdatabase;
-        options.oldDomain = answer.oldDomain;
-        options.newDomain = answer.newDomain;
-
-        if (answer.exclude != false) {
-            options.exclude = answer.exclude.split(' ');
+    return inquirer.prompt(question).then(answers => {
+        options = answers;
+        if (answers.exclude != false) {
+            options.exclude = answers.exclude.split(' ');
         }
     });
 });
