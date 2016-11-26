@@ -13,7 +13,6 @@
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-gzip": "^1.4.0",
-    "gulp-prompt": "^0.2.0",
     "gulp-replace": "^0.5.4",
     "gulp-sequence": "^0.4.6",
     "gulp-tar": "^1.9.0",

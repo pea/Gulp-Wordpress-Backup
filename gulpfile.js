@@ -11,7 +11,6 @@ const zip = require('gulp-zip');
 const gzip = require('gulp-gzip');
 const tar = require('gulp-tar');
 const _ = require('underscore');
-const prompt = require('gulp-prompt');
 const inquirer = require('inquirer');
 const glob = require("glob");
 
