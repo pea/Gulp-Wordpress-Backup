@@ -15,8 +15,8 @@ var prompt = require('gulp-prompt');
 var inquirer = require('inquirer');
 
 var argv = require('yargs')
-    .default('oldDomain', '')
-    .default('newDomain', '')
+    .default('olddomain', '')
+    .default('newdomain', '')
     .default('dbprefix', 'wp_')
     .default('archiver', 'tar.gz')
     .array('exclude')
@@ -79,13 +79,13 @@ gulp.task('prompt', () => {
         },
         {
             type : 'input',
-            name : 'oldDomain',
+            name : 'olddomain',
             message : 'Name of old domain to replace',
             default : 'localhost'
         },
         {
             type : 'input',
-            name : 'newDomain',
+            name : 'newdomain',
             message : 'Name of new domain to replace with',
             default : 'mywebsite.com'
         },
@@ -174,8 +174,8 @@ gulp.task('dumpDatabase', () => {
         return gulp.src([dumpPath])
             .pipe(
                 replace(
-                    RegExp.escape(options.oldDomain),
-                    options.newDomain
+                    RegExp.escape(options.olddomain),
+                    options.newdomain
                 )
             )
             .pipe(replace(/(CREATE TABLE IF NOT EXISTS `)(.[^_])_(\S+)/gi, 'CREATE TABLE IF NOT EXISTS `' + options.dbprefix + '$3'))

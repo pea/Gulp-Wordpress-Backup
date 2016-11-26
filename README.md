@@ -13,7 +13,7 @@ gulp
     --dbpass <database password>
     --dbdatabase <database name>
     --dbprefix (optional) (default: wp_) <table prefix>
-    --oldDomain (optional) <old domain> --newDomain <new domain>
+    --olddomain (optional) <old domain> --newdomain <new domain>
     --archiver <zip | tar.gz> (default: tar.gz)
     --exclude (optional) <file/ directory path>
 ```
@@ -34,9 +34,9 @@ To import the backup, create a database with the SQL dump, Configure wp-config.p
 --dbprefix mysite_
 ```
 
-### Replace Domain in Database (--oldDomain & --newDomain)
+### Replace Domain in Database (--olddomain & --newdomain)
 ```ssh
---oldDomain localhost --newDomain mywebsite.com
+--olddomain localhost --newdomain mywebsite.com
 ```
 
 ### Archiver Option (--archiver)
