@@ -53,12 +53,12 @@ Default: tar.gz
 ### Exclude Files and Directories (--exclude)
 Exclude a file or directory. Uses glob syntax. No leading slash.
 
-Exclude /node_modules and /vendor directories from all themes
+#### Example: Exclude /node_modules and /vendor directories from all themes
 ```ssh
 --exclude ../Wordpress/wp-content/themes/**/node_modules --exclude ../Wordpress/wp-content/themes/**/vendor
 ```
 
-Exclude wp-config.php
+#### Example: Exclude wp-config.php
 ```ssh
 --exclude wp-config.php
 ```
