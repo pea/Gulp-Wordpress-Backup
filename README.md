@@ -6,6 +6,12 @@ Gulpfile to backup a Wordpress installation for migration.
 2. Execute `npm install` in /exports
 
 ## Usage
+### Interactive
+```ssh
+gulp --interactive
+```
+
+### Non-interactive
 ```ssh
 gulp
     --wppath <path to wordpress>
@@ -18,15 +24,6 @@ gulp
     --archiver <zip | tar.gz> (default: tar.gz)
     --exclude (optional) <file/ directory path>
 ```
-
-Alternatively you can run the prompt which will walk you through the configuration. Just execute:
-```ssh
-gulp --interactive
-```
-
-`exports/` will populate with the backup - an sql dump and an archive of the files.
-
-To import the backup, create a database with the SQL dump, Configure wp-config.php and other configuration files.
 
 ## Commands
 
@@ -54,7 +51,7 @@ Choose the archiver to use whem compressing the files. You have the option of zi
 Default: tar.gz
 
 ### Exclude Files and Directories (--exclude)
-Exclude a file or directory. Uses glob syntax.
+Exclude a file or directory. Uses glob syntax. No leading slash.
 
 Exclude /node_modules and /vendor directories from all themes
 ```ssh
