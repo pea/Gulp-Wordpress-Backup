@@ -17,6 +17,7 @@ var inquirer = require('inquirer');
 var argv = require('yargs')
     .default('oldDomain', '')
     .default('newDomain', '')
+    .default('dbprefix', 'wp_')
     .default('archiver', 'tar.gz')
     .array('exclude')
     .argv
@@ -69,6 +70,12 @@ gulp.task('prompt', () => {
             name : 'dbdatabase',
             message : 'Database name',
             default : 'wordpress'
+        },
+        {
+            type : 'input',
+            name : 'dbprefix',
+            message : 'Table prefix',
+            default : 'wp_'
         },
         {
             type : 'input',
@@ -149,7 +156,6 @@ gulp.task('archiveFiles', () => {
  * Dump the database into /tmp, replace the domains and move to /
  */
 gulp.task('dumpDatabase', () => {
-
     var dumpPath = './' + dir + '/tmp/database.sql';
     return new Promise((resolve,reject) => {
         mysqlDump({
@@ -166,9 +172,16 @@ gulp.task('dumpDatabase', () => {
     .then((err,res) => {
         if(err !== null);
         return gulp.src([dumpPath])
-            .pipe(replace(RegExp.escape(options.oldDomain), options.newDomain))
+            .pipe(
+                replace(
+                    RegExp.escape(options.oldDomain),
+                    options.newDomain
+                )
+            )
+            .pipe(replace(/(CREATE TABLE IF NOT EXISTS `)(.[^_])_(\S+)/gi, 'CREATE TABLE IF NOT EXISTS `' + options.dbprefix + '$3'))
+            .pipe(replace(/(INSERT INTO `)(.[^_])_(\S+)/gi, 'INSERT INTO `' + options.dbprefix + '$3'))
             .pipe(gulp.dest('./' + dir));
-    });
+    })
 });
 
 /** 

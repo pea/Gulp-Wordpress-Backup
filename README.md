@@ -12,8 +12,9 @@ gulp
     --dbuser <database username>
     --dbpass <database password>
     --dbdatabase <database name>
+    --dbprefix (optional) (default: wp_) <table prefix>
     --oldDomain (optional) <old domain> --newDomain <new domain>
-    --archiver zip | tar.gz
+    --archiver <zip | tar.gz> (default: tar.gz)
     --exclude (optional) <file/ directory path>
 ```
 
@@ -28,15 +29,20 @@ To import the backup, create a database with the SQL dump, Configure wp-config.p
 
 ## Commands
 
-### Replace domain in database (--oldDomain & --newDomain)
+### Change Table Prefix
 ```ssh
-gulp --oldDomain localhost --newDomain mywebsite.com
+--dbprefix mysite_
+```
+
+### Replace Domain in Database (--oldDomain & --newDomain)
+```ssh
+--oldDomain localhost --newDomain mywebsite.com
 ```
 
 ### Archiver Option (--archiver)
 Choose the archiver to use whem compressing the files. You have the option of zip and tar.gz. Zip can have problems with symlinks. If unzipping is failing use tar.gz.
 ```ssh
-gulp --archiver zip
+--archiver zip
 ```
 Default: tar.gz
 
@@ -45,12 +51,12 @@ Exclude a file or directory. Uses glob syntax.
 
 Exclude /node_modules and /wp-content/themes/mytheme/vendor
 ```ssh
-gulp --exclude node_modules --exclude wp-content/themes/mytheme/vendor
+--exclude node_modules --exclude wp-content/themes/mytheme/vendor
 ```
 
 Exclude wp-config.php
 ```ssh
-gulp --exclude wp-config.php
+--exclude wp-config.php
 ```
 
 ## Restoring Files
