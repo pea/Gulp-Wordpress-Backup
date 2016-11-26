@@ -28,7 +28,7 @@ To import the backup, create a database with the SQL dump, Configure wp-config.p
 
 ## Commands
 
-### Replace domain in database (--oldDomain & --oldDomain)
+### Replace domain in database (--oldDomain & --newDomain)
 ```ssh
 gulp --oldDomain localhost --newDomain mywebsite.com
 ```
