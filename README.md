@@ -2,8 +2,8 @@
 Gulpfile to backup a Wordpress installation for migration.
 
 ## Installation
-1. Clone to /exports
-2. Execute `npm install` in /exports
+1. Clone to directory outside of Wordpress installation
+2. Execute `npm install`
 
 ## Usage
 ### Interactive
