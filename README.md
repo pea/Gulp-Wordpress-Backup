@@ -28,19 +28,19 @@ To import the backup, create a database with the SQL dump, Configure wp-config.p
 
 ## Commands
 
-### Replace domain in database
+### Replace domain in database (--oldDomain & --oldDomain)
 ```ssh
 gulp --oldDomain localhost --newDomain mywebsite.com
 ```
 
-### Archiver Option
+### Archiver Option (--archiver)
 Choose the archiver to use whem compressing the files. You have the option of zip and tar.gz. Zip can have problems with symlinks. If unzipping is failing use tar.gz.
 ```ssh
 gulp --archiver zip
 ```
 Default: tar.gz
 
-### Exclude Files and Directories
+### Exclude Files and Directories (--exclude)
 Exclude a file or directory. Uses glob syntax.
 
 Exclude /node_modules and /wp-content/themes/mytheme/vendor
