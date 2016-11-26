@@ -8,6 +8,7 @@ Gulpfile to backup a Wordpress installation for migration.
 ## Usage
 ```ssh
 gulp
+    --wppath <path to wordpress>
     --dbhost <hostname>
     --dbuser <database username>
     --dbpass <database password>
@@ -29,7 +30,13 @@ To import the backup, create a database with the SQL dump, Configure wp-config.p
 
 ## Commands
 
-### Change Table Prefix
+### Path to Wordpress (--wppath)
+Specify the path to the wordpress installation. Requires a trailing slash.
+```ssh
+--wppath ../Wordpress/
+```
+
+### Change Table Prefix (--dbprefix)
 ```ssh
 --dbprefix mysite_
 ```
@@ -49,9 +56,9 @@ Default: tar.gz
 ### Exclude Files and Directories (--exclude)
 Exclude a file or directory. Uses glob syntax.
 
-Exclude /node_modules and /wp-content/themes/mytheme/vendor
+Exclude /node_modules and /vendor directories from all themes
 ```ssh
---exclude node_modules --exclude wp-content/themes/mytheme/vendor
+--exclude ../Wordpress/wp-content/themes/**/node_modules --exclude ../Wordpress/wp-content/themes/**/vendor
 ```
 
 Exclude wp-config.php
