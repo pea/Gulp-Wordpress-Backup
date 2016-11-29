@@ -117,7 +117,7 @@ gulp.task('setup', () => {
  * Archive files, excluding vendors
  */
 gulp.task('archiveFiles', () => {
-    const srcFiles = [options.wppath + '**'];
+    const srcFiles = [options.wppath + '**', options.wppath + '/**/.*'];
     if (!!options.exclude) {
         _.each(options.exclude, (item) => {
             srcFiles.push(
