@@ -63,6 +63,9 @@ Exclude a file or directory. Uses glob syntax. No leading slash.
 --exclude wp-config.php
 ```
 
+## Multisite
+Backing up an entire mutlisite is exactly the same as a single site. The only difference is in the replacement of each sub-site domain opposed to one.
+
 ## Restoring Files
 Upload tar.gz
 ```ssh
