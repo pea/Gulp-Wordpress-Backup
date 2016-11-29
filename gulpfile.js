@@ -4,7 +4,7 @@ const datetime = require('node-datetime');
 const dt = datetime.create();
 const mkdirp = require('mkdirp');
 const gulpSequence = require('gulp-sequence');
-const replace = require('gulp-replace');
+const replace = require('gulp-batch-replace');
 const del = require('del');
 const fs = require('fs');
 const zip = require('gulp-zip');
@@ -15,8 +15,8 @@ const inquirer = require('inquirer');
 const glob = require("glob");
 
 const argv = require('yargs')
-    .default('olddomain', '')
-    .default('newdomain', '')
+    .array('replace')
+    .default('replace', [])
     .default('dbprefix', 'wp_')
     .default('archiver', 'tar.gz')
     .array('exclude')
@@ -34,6 +34,7 @@ RegExp.escape = function (s) {
  * Optional Prompt
  */
 gulp.task('prompt', () => {
+
     if (!argv.interactive) {
         options = argv;
         return;
@@ -84,26 +85,21 @@ gulp.task('prompt', () => {
         },
         {
             type: 'input',
-            name: 'olddomain',
-            message: 'Name of old domain to replace',
-            default: ''
-        },
-        {
-            type: 'input',
-            name: 'newdomain',
-            message: 'Name of new domain to replace with',
-            default: ''
-        },
-        {
-            type: 'input',
             name: 'exclude',
             message: 'Items to exclude (seperate by spaces)',
+            default: false
+        },
+        {
+            type: 'input',
+            name: 'replace',
+            message: 'Strings to replace in database (old,new old,new)',
             default: false
         }
     ];
 
     return inquirer.prompt(question).then(answers => {
         options = answers;
+        options.interactive = true;
         options.exclude = answers.exclude ? answers.exclude.split(' ') : undefined;
     });
 });
@@ -150,6 +146,20 @@ gulp.task('archiveFiles', () => {
  */
 gulp.task('dumpDatabase', () => {
     const dumpPath = './' + dir + '/tmp/database.sql';
+
+    if (options.interactive) {
+        options.replace = options.replace.split(' ');
+    }
+
+    console.log(options.replace);
+
+    if (options.replace.length > 0 && options.replace.length != false) {
+        options.replace = options.replace.map((item) => {
+            const array = item.split(',');
+            return [array[0], array[1]];
+        });
+    }
+    
     return new Promise((resolve, reject) => {
         mysqlDump({
             host: options.dbhost,
@@ -162,15 +172,12 @@ gulp.task('dumpDatabase', () => {
             resolve(dumpPath);
         });
     })
+    .catch((err) => {
+        console.log(err);
+    })
     .then((err) => {
-        if (err !== null);
         return gulp.src([dumpPath])
-            .pipe(
-                replace(
-                    RegExp.escape(options.olddomain),
-                    options.newdomain
-                )
-            )
+            .pipe(replace(options.replace))
             .pipe(replace(/(CREATE TABLE IF NOT EXISTS `)(.[^_])_(\S+)/gi, 'CREATE TABLE IF NOT EXISTS `' + options.dbprefix + '$3'))
             .pipe(replace(/(INSERT INTO `)(.[^_])_(\S+)/gi, 'INSERT INTO `' + options.dbprefix + '$3'))
             .pipe(gulp.dest('./' + dir));

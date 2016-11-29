@@ -20,7 +20,7 @@ gulp
     --dbpass <database password>
     --dbdatabase <database name>
     --dbprefix (optional) (default: wp_) <table prefix>
-    --olddomain (optional) <old domain> --newdomain <new domain>
+    --replace (optional) <curent string>,<new string>
     --archiver <zip | tar.gz> (default: tar.gz)
     --exclude (optional) <file/ directory path>
 ```
@@ -38,9 +38,14 @@ Specify the path to the wordpress installation. Requires a trailing slash.
 --dbprefix mysite_
 ```
 
-### Replace Domain in Database (--olddomain & --newdomain)
+### Replace String in Database (--replace)
+Replace a string (usually a domain) in the database dump. 
 ```ssh
---olddomain localhost --newdomain mywebsite.com
+--replace localhost,mydomain.com --replace olddomain.com,newdomain.com
+```
+When using the interactive prompt the synax is slightly different
+```ssh
+localhost,mydomain.com olddomain.com,newdomain.com
 ```
 
 ### Type of Compression (--archiver)

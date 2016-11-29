@@ -12,6 +12,7 @@
   "dependencies": {
     "del": "^2.2.2",
     "gulp": "^3.9.1",
+    "gulp-batch-replace": "0.0.0",
     "gulp-gzip": "^1.4.0",
     "gulp-replace": "^0.5.4",
     "gulp-sequence": "^0.4.6",
