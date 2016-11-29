@@ -151,8 +151,6 @@ gulp.task('dumpDatabase', () => {
         options.replace = options.replace.split(' ');
     }
 
-    console.log(options.replace);
-
     if (options.replace.length > 0 && options.replace.length != false) {
         options.replace = options.replace.map((item) => {
             const array = item.split(',');
