@@ -147,11 +147,11 @@ gulp.task('archiveFiles', () => {
 gulp.task('dumpDatabase', () => {
     const dumpPath = './' + dir + '/tmp/database.sql';
 
-    if (options.interactive) {
+    if (options.interactive && options.replace != false) {
         options.replace = options.replace.split(' ');
     }
 
-    if (options.replace.length > 0 && options.replace.length != false) {
+    if (options.replace.length > 0 && options.replace != false) {
         options.replace = options.replace.map((item) => {
             const array = item.split(',');
             return [array[0], array[1]];
