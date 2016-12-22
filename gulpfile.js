@@ -4,7 +4,7 @@ const datetime = require('node-datetime');
 const dt = datetime.create();
 const mkdirp = require('mkdirp');
 const gulpSequence = require('gulp-sequence');
-const replace = require('gulp-batch-replace');
+const replace = require('gulp-replace');
 const del = require('del');
 const fs = require('fs');
 const zip = require('gulp-zip');
@@ -13,100 +13,20 @@ const tar = require('gulp-tar');
 const _ = require('underscore');
 const inquirer = require('inquirer');
 const glob = require("glob");
-
-const argv = require('yargs')
-    .array('replace')
-    .default('replace', [])
-    .default('dbprefix', 'wp_')
-    .default('archiver', 'tar.gz')
-    .array('exclude')
-    .argv;
+const colors = require("colors");
+const exec = require("exec");
 
 const dir = dt.format('m-d-y_H.M.S');
-
-let options = {};
+let packageJson = JSON.parse(fs.readFileSync('./package.json'));
+const options = packageJson.nwb;
 
 RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
 
 /**
- * Optional Prompt
- */
-gulp.task('prompt', () => {
-
-    if (!argv.interactive) {
-        options = argv;
-        return;
-    }
-
-    const question = [
-        {
-            type: 'input',
-            name: 'wppath',
-            message: 'Path to Wordpress installation',
-            default: '../Wordpress/'
-        },
-        {
-            type: 'input',
-            name: 'archiver',
-            message: 'Compress with zip or tar.gz?',
-            default: 'tar.gz'
-        },
-        {
-            type: 'input',
-            name: 'dbhost',
-            message: 'Database host',
-            default: 'localhost'
-        },
-        {
-            type: 'input',
-            name: 'dbuser',
-            message: 'Database username',
-            default: 'wordpress'
-        },
-        {
-            type: 'input',
-            name: 'dbpass',
-            message: 'Database password',
-            default: 'wordpress'
-        },
-        {
-            type: 'input',
-            name: 'dbdatabase',
-            message: 'Database name',
-            default: 'wordpress'
-        },
-        {
-            type: 'input',
-            name: 'dbprefix',
-            message: 'Table prefix',
-            default: 'wp_'
-        },
-        {
-            type: 'input',
-            name: 'exclude',
-            message: 'Items to exclude (seperate by spaces)',
-            default: false
-        },
-        {
-            type: 'input',
-            name: 'replace',
-            message: 'Strings to replace in database (old,new old,new)',
-            default: false
-        }
-    ];
-
-    return inquirer.prompt(question).then(answers => {
-        options = answers;
-        options.interactive = true;
-        options.exclude = answers.exclude ? answers.exclude.split(' ') : undefined;
-    });
-});
-
-/**
  * Setup directory structure
- */
+ */ 
 gulp.task('setup', () => {
     return mkdirp('./' + dir + '/tmp', (err) => {
         if (err) throw err;
@@ -117,7 +37,17 @@ gulp.task('setup', () => {
  * Archive files, excluding vendors
  */
 gulp.task('archiveFiles', () => {
-    const srcFiles = [options.wppath + '**', options.wppath + '/**/.*'];
+    let srcFiles = [options.wppath + '/**', options.wppath + '/**/*.*'];
+
+    if (!!options.include) {
+        srcFiles = [];
+        _.each(options.include, (item) => {
+            srcFiles.push(
+                options.wppath + item + '/**/*.*'
+            );
+        });
+    }
+
     if (!!options.exclude) {
         _.each(options.exclude, (item) => {
             srcFiles.push(
@@ -134,7 +64,7 @@ gulp.task('archiveFiles', () => {
     }
 
     if (options.archiver === 'tar.gz') {
-        return gulp.src(srcFiles)
+        return gulp.src(srcFiles, {base: options.wppath})
             .pipe(tar('files.tar'))
             .pipe(gzip())
             .pipe(gulp.dest('./' + dir));
@@ -142,19 +72,13 @@ gulp.task('archiveFiles', () => {
 });
 
 /**
- * Dump the database into /tmp, replace the domains and move to /
+ * Dump the database into /tmp
  */
 gulp.task('dumpDatabase', () => {
     const dumpPath = './' + dir + '/tmp/database.sql';
-
-    if (options.interactive && options.replace != false) {
-        options.replace = options.replace.split(' ');
-    }
-
     if (options.replace.length > 0 && options.replace != false) {
         options.replace = options.replace.map((item) => {
-            const array = item.split(',');
-            return [array[0], array[1]];
+            return [item[0], item[1]];
         });
     }
     
@@ -172,14 +96,53 @@ gulp.task('dumpDatabase', () => {
     })
     .catch((err) => {
         console.log(err);
-    })
-    .then((err) => {
-        return gulp.src([dumpPath])
-            .pipe(replace(options.replace))
-            .pipe(replace(/(CREATE TABLE IF NOT EXISTS `)(.[^_])_(\S+)/gi, 'CREATE TABLE IF NOT EXISTS `' + options.dbprefix + '$3'))
-            .pipe(replace(/(INSERT INTO `)(.[^_])_(\S+)/gi, 'INSERT INTO `' + options.dbprefix + '$3'))
-            .pipe(gulp.dest('./' + dir));
     });
+});
+
+/**
+ * Replace strings in sql dump
+ */
+gulp.task('replaceStrings', () => {
+    const dumpPath = './' + dir + '/tmp/database.sql';
+    return gulp.src([dumpPath])
+        .pipe(replace(options.replace))
+        .pipe(
+            replace(
+                /(CREATE TABLE IF NOT EXISTS `)(.[^_])_(\S+)/gi,
+                'CREATE TABLE IF NOT EXISTS `' + options.dbprefix + '$3'
+                )
+            )
+        .pipe(
+            replace(
+                /(INSERT INTO `)(.[^_])_(\S+)/gi,
+                'INSERT INTO `' + options.dbprefix + '$3'
+            )
+        )
+        .pipe(
+            replace(
+                /s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?")/g,
+                (match, p1, p2, p3) => typeof p3 != 'undefined' ? `s:${p3.length}:"${p3}"` : ''
+            )
+        )
+        .pipe(gulp.dest('./' + dir));
+});
+
+gulp.task('finalise', () => {
+    // Report to console
+    console.log('Database: '.yellow, `${dir}/database.sql`.green);
+    console.log('Files: '.yellow, `${dir}/files.${options.archiver}`.green);
+
+    // Write upload command to package.json
+    packageJson.scripts.upload = `scp ${dir}/files.${options.archiver} ${options.sshUser}@${options.sshHost}:${options.sshPath}`;
+    fs.writeFile(
+        './package.json', 
+        JSON.stringify(packageJson, null, 2), (err) => {
+            if(err) {
+                return console.log(err);
+            }
+        }
+    );
+
 });
 
 /**
@@ -190,9 +153,10 @@ gulp.task('clearUp', () => {
 });
 
 gulp.task('default', gulpSequence(
-    'prompt',
     'setup',
     'archiveFiles',
     'dumpDatabase',
-    'clearUp'
+    'replaceStrings',
+    'clearUp',
+    'finalise'
 ));

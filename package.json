@@ -3,19 +3,45 @@
   "version": "1.0.0",
   "description": "Painless Wordpress backup with Node.js",
   "main": "gulpfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Peter Bailey (peabay.xyz)",
   "license": "ISC",
+  "scripts": {
+    "upload": "scp 12-22-16_10.00.19/files.zip peter@peterbailey.eu:sinclair.peterbailey.eu"
+  },
+  "nwb": {
+    "wppath": "../Wordpress",
+    "dbhost": "localhost",
+    "dbuser": "wordpress",
+    "dbpass": "wordpress",
+    "dbdatabase": "wordpress",
+    "dbprefix": "wp_",
+    "archiver": "zip",
+    "replace": [
+      [
+        "localhost",
+        "peabay.xyz"
+      ]
+    ],
+    "exclude": false,
+    "include": [
+      "/wp-content/themes/Sinclair"
+    ],
+    "sshUser": "",
+    "sshHost": "",
+    "sshPath": ""
+  },
   "devDependencies": {},
   "dependencies": {
+    "colors": "^1.1.2",
     "del": "^2.2.2",
+    "exec": "^0.2.1",
     "gulp": "^3.9.1",
     "gulp-batch-replace": "0.0.0",
+    "gulp-exec": "^2.1.3",
     "gulp-gzip": "^1.4.0",
     "gulp-replace": "^0.5.4",
     "gulp-sequence": "^0.4.6",
+    "gulp-string-replace": "^0.3.0",
     "gulp-tar": "^1.9.0",
     "gulp-zip": "^3.2.0",
     "inquirer": "^1.2.3",
