@@ -6,7 +6,7 @@
   "author": "Peter Bailey (peabay.xyz)",
   "license": "ISC",
   "scripts": {
-    "upload": "scp 12-25-16_14.18.10/files.tar.gz peter@peterbailey.eu:sinclair.peterbailey.eu"
+    "upload": "scp 12-25-16_16.44.53/files.tar.gz peter@peterbailey.eu:sinclair.peterbailey.eu && ssh -t peterbailey.eu 'cd sinclair.peterbailey.eu ; bash'"
   },
   "nwb": {
     "wppath": "../Wordpress",
@@ -16,11 +16,21 @@
     "dbdatabase": "wordpress",
     "dbprefix": "wp_",
     "archiver": "tar.gz",
-    "replace": false,
-    "exclude": false,
-    "include": [
-      "/wp-content/uploads/sites"
+    "replace": [
+      [
+        null,
+        null
+      ],
+      [
+        null,
+        null
+      ]
     ],
+    "include": [
+      "/wp-content/uploads/sites",
+      "/wp-includes/css"
+    ],
+    "exclude": false,
     "sshUser": "peter",
     "sshHost": "peterbailey.eu",
     "sshPath": "sinclair.peterbailey.eu"

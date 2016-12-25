@@ -37,7 +37,7 @@ gulp.task('setup', () => {
  * Archive files, excluding vendors
  */
 gulp.task('archiveFiles', () => {
-    let srcFiles = [options.wppath + '/**', options.wppath + '/**/*.*'];
+    let srcFiles = [options.wppath + '/**', options.wppath + '/**/.*'];
 
     if (!!options.include) {
         srcFiles = [];
@@ -76,11 +76,6 @@ gulp.task('archiveFiles', () => {
  */
 gulp.task('dumpDatabase', () => {
     const dumpPath = './' + dir + '/tmp/database.sql';
-    if (options.replace.length > 0 && options.replace != false) {
-        options.replace = options.replace.map((item) => {
-            return [item[0], item[1]];
-        });
-    }
     
     return new Promise((resolve, reject) => {
         mysqlDump({
@@ -104,6 +99,15 @@ gulp.task('dumpDatabase', () => {
  */
 gulp.task('replaceStrings', () => {
     const dumpPath = './' + dir + '/tmp/database.sql';
+
+    if (options.replace.length > 0 && options.replace != false) {
+        options.replace = options.replace.map((item) => {
+            return [item[0], item[1]];
+        });
+    } else {
+        options.replace = ['', ''];
+    }
+
     return gulp.src([dumpPath])
         .pipe(replace(options.replace))
         .pipe(
@@ -133,15 +137,18 @@ gulp.task('finalise', () => {
     console.log('Files: '.yellow, `${dir}/files.${options.archiver}`.green);
 
     // Write upload command to package.json
-    packageJson.scripts.upload = `scp ${dir}/files.${options.archiver} ${options.sshUser}@${options.sshHost}:${options.sshPath}`;
-    fs.writeFile(
-        './package.json', 
-        JSON.stringify(packageJson, null, 2), (err) => {
-            if(err) {
-                return console.log(err);
+    if (!!options.sshUser && !!options.sshHost && !!options.sshPath) {
+        packageJson.scripts.upload = `scp ${dir}/files.${options.archiver} ${options.sshUser}@${options.sshHost}:${options.sshPath}`;
+        packageJson.scripts.upload += ` && ssh -t ${options.sshHost} 'cd ${options.sshPath} ; bash'`;
+        fs.writeFile(
+            './package.json', 
+            JSON.stringify(packageJson, null, 2), (err) => {
+                if(err) {
+                    return console.log(err);
+                }
             }
-        }
-    );
+        );
+    }
 
 });
 
@@ -157,6 +164,21 @@ gulp.task('default', gulpSequence(
     'archiveFiles',
     'dumpDatabase',
     'replaceStrings',
+    'clearUp',
+    'finalise'
+));
+
+gulp.task('database', gulpSequence(
+    'setup',
+    'dumpDatabase',
+    'replaceStrings',
+    'clearUp',
+    'finalise'
+));
+
+gulp.task('files', gulpSequence(
+    'setup',
+    'archiveFiles',
     'clearUp',
     'finalise'
 ));

@@ -5,52 +5,89 @@ Gulpfile to backup a Wordpress installation for migration.
 1. Clone to directory outside of Wordpress installation
 2. Execute `npm install`
 
-## Usage
-Configure nwb in package.json and run:
-```ssh
-gulp
-```
+## Setup
+Configure nwb in package.json
 
 ## Settings
+
+`nwb.wppath` Path to local Wordpress installation
+
+`nwb.dbhost` Database host
+
+`nwb.dbuser` Database user
+
+`nwb.dbpass` Database password
+
+`nwb.dbdatabase` Database name
+
+`nwb.dbprefix` New table prefix
+
+`nwb.archiver` Archiver to use (zip | tar.gz)
+
+`nwb.replace` Strings to replace in database (array | false)
+
+`nwb.include` Directories to only include in archive, subject to nwb.exclude (array | false)
+
+`nwb.exclude` Directories to exclude from archive (array | false)
+
+`nwb.sshUser` SSH username (string | false)
+
+`nwb.sshHost` SSH host (string | false)
+
+`nwb.sshPath` SSH path to server's Wordpress installation (string | false)
+
+#### Example
 ```json
 "nwb": {
-    "wppath": "../Wordpress", `Path to Wordpress installation to backup`
-    "dbhost": "localhost", // Database host
-    "dbuser": "wordpress", // Database user
-    "dbpass": "wordpress", // Database password
-    "dbdatabase": "wordpress", // Database name
-    "dbprefix": "wp_", // Database prefix
-    "archiver": "tar.gz", // Archiver to use (zip | tar.gz)
-    "replace": [ // Array of strings to replace in database dump
+    "wppath": "../Wordpress",
+    "dbhost": "localhost",
+    "dbuser": "wordpress",
+    "dbpass": "wordpress",
+    "dbdatabase": "wordpress",
+    "dbprefix": "wp_",
+    "archiver": "tar.gz",
+    "replace": [
       [
-        "localhost",
-        "sinclair.peabay.xyz"
+        "localhost", "peabay.xyz"
       ]
     ],
-    "exclude": [ // Directoties to exclude from archive
+    "include": [
+      "/wp-content"
+    ],
+    "exclude": [
         "wp-content/themes/**/node_modules",
         "wp-content/themes/**/vendor"
     ],
-    "include": [ // Directories to include only
-      "/wp-content"
-    ],
-    "sshUser": "peter", // SSH username
-    "sshHost": "peterbailey.eu", // SSH host
-    "sshPath": "sinclair.peterbailey.eu" // SSH path
-}
+    "sshUser": "peabay",
+    "sshHost": "peabay.xyz",
+    "sshPath": "peabay.xyz/Wordpress"
 }
 ```
 
-## Multisite
-Backing up an entire mutlisite is exactly the same as a single site. The only difference is in the replacement of each sub-site domain opposed to one.
+## Usage
+#### Backup Database and Files
+```ssh
+gulp
+```
+#### Backup Only Files
+```ssh
+gulp files
+```
+#### Backup Only Database
+```ssh
+gulp database
+```
+
+## Multisites
+Backing up a single site from a multisite is not possible, however backing up an entire multisite is. Remember to replace the domain of each site in the database.
 
 ## Restoring Files
-Upload tar.gz
+If SSH details are provided the script will generate a command in package.json to upload the archived files and SSH you into the server. To execute this command run:
 ```ssh
-scp <file to upload> <username>@<hostname>:<destination path>
+node run upload
 ```
-To extract and overwrite existing files.
-### Extract tar.gz
+
+To extract the archive and replace existing files run:
 ```ssh
-tar -xvzf path/to/files.tar.gz -C path/to/wordpress/root
+tar -xvzf files.tar.gz -C .
 ```
