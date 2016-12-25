@@ -1,12 +1,12 @@
 {
   "name": "node-wordpress-backup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Painless Wordpress backup with Node.js",
   "main": "gulpfile.js",
   "author": "Peter Bailey (peabay.xyz)",
   "license": "ISC",
   "scripts": {
-    "upload": "scp 12-22-16_10.00.19/files.zip peter@peterbailey.eu:sinclair.peterbailey.eu"
+    "upload": "scp 12-25-16_14.18.10/files.tar.gz peter@peterbailey.eu:sinclair.peterbailey.eu"
   },
   "nwb": {
     "wppath": "../Wordpress",
@@ -15,20 +15,15 @@
     "dbpass": "wordpress",
     "dbdatabase": "wordpress",
     "dbprefix": "wp_",
-    "archiver": "zip",
-    "replace": [
-      [
-        "localhost",
-        "peabay.xyz"
-      ]
-    ],
+    "archiver": "tar.gz",
+    "replace": false,
     "exclude": false,
     "include": [
-      "/wp-content/themes/Sinclair"
+      "/wp-content/uploads/sites"
     ],
-    "sshUser": "",
-    "sshHost": "",
-    "sshPath": ""
+    "sshUser": "peter",
+    "sshHost": "peterbailey.eu",
+    "sshPath": "sinclair.peterbailey.eu"
   },
   "devDependencies": {},
   "dependencies": {

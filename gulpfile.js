@@ -120,8 +120,8 @@ gulp.task('replaceStrings', () => {
         )
         .pipe(
             replace(
-                /s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?")/g,
-                (match, p1, p2, p3) => typeof p3 != 'undefined' ? `s:${p3.length}:"${p3}"` : ''
+                /s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?")/,
+                (match, p1, p2, p3) => typeof p3 != 'undefined' ? `s:${p3.length}:\\"${p3.replace(/"/g, '\\"')}\\"` : `s:0:\\"\\"`
             )
         )
         .pipe(gulp.dest('./' + dir));
