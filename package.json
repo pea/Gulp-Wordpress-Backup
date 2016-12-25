@@ -1,11 +1,11 @@
 {
-  "name": "node-wordpress-backup",
-  "version": "1.0.2",
-  "description": "Painless Wordpress backup with Node.js",
+  "name": "gulp-wordpress-backup",
+  "version": "1.0.1",
+  "description": "Painless Wordpress backup with Gulp",
   "main": "gulpfile.js",
   "author": "Peter Bailey (peabay.xyz)",
   "license": "ISC",
-  "nwb": {
+  "gwb": {
     "wppath": "",
     "dbhost": "",
     "dbuser": "",

@@ -1,4 +1,4 @@
-# Node Wordpress Backup
+# Gulp Wordpress Backup
 Gulpfile to backup a Wordpress installation for migration.
 
 ## Installation
@@ -6,39 +6,39 @@ Gulpfile to backup a Wordpress installation for migration.
 2. Execute `npm install`
 
 ## Setup
-Configure nwb in package.json
+Configure gwb in package.json
 
 ## Settings
 
-`nwb.wppath` Path to local Wordpress installation
+`gwb.wppath` Path to local Wordpress installation
 
-`nwb.dbhost` Database host
+`gwb.dbhost` Database host
 
-`nwb.dbuser` Database user
+`gwb.dbuser` Database user
 
-`nwb.dbpass` Database password
+`gwb.dbpass` Database password
 
-`nwb.dbdatabase` Database name
+`gwb.dbdatabase` Database name
 
-`nwb.dbprefix` New table prefix
+`gwb.dbprefix` New table prefix
 
-`nwb.archiver` Archiver to use (zip | tar.gz)
+`gwb.archiver` Archiver to use (zip | tar.gz)
 
-`nwb.replace` Strings to replace in database (array | false)
+`gwb.replace` Strings to replace in database (array | false)
 
-`nwb.include` Directories to only include in archive, subject to nwb.exclude (array | false)
+`gwb.include` Directories to only include in archive, subject to gwb.exclude (array | false)
 
-`nwb.exclude` Directories to exclude from archive (array | false)
+`gwb.exclude` Directories to exclude from archive (array | false)
 
-`nwb.sshUser` SSH username (string | false)
+`gwb.sshUser` SSH username (string | false)
 
-`nwb.sshHost` SSH host (string | false)
+`gwb.sshHost` SSH host (string | false)
 
-`nwb.sshPath` SSH path to server's Wordpress installation (string | false)
+`gwb.sshPath` SSH path to server's Wordpress installation (string | false)
 
 #### Example
 ```json
-"nwb": {
+"gwb": {
     "wppath": "../Wordpress",
     "dbhost": "localhost",
     "dbuser": "wordpress",

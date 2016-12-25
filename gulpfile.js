@@ -18,7 +18,7 @@ const exec = require("exec");
 
 const dir = dt.format('m-d-y_H.M.S');
 let packageJson = JSON.parse(fs.readFileSync('./package.json'));
-const options = packageJson.nwb;
+const options = packageJson.gwb;
 
 RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -104,8 +104,6 @@ gulp.task('replaceStrings', () => {
         options.replace = options.replace.map((item) => {
             return [item[0], item[1]];
         });
-    } else {
-        options.replace = ['', ''];
     }
 
     return gulp.src([dumpPath])
