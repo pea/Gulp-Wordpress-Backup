@@ -24,7 +24,7 @@ Configure gwb in package.json
 
 `gwb.archiver` Archiver to use (zip | tar.gz)
 
-`gwb.replace` Strings to replace in database (array | false)
+`gwb.replace` Strings to replace in database (object | false)
 
 `gwb.include` Directories to only include in archive, subject to gwb.exclude (array | false)
 
@@ -46,11 +46,9 @@ Configure gwb in package.json
     "dbdatabase": "wordpress",
     "dbprefix": "wp_",
     "archiver": "tar.gz",
-    "replace": [
-      [
-        "localhost", "peabay.xyz"
-      ]
-    ],
+    "replace": {
+        "localhost": "peabay.xyz"
+    },
     "include": [
       "/wp-content"
     ],
@@ -77,6 +75,9 @@ gulp files
 ```ssh
 gulp database
 ```
+
+## Specifying An Alternative Set of Options
+Use the `--options` flag to specify the object key of alternative options. Without this flag 'gwb' will be used. Useful for storing settings for staging and live environments.
 
 ## Multisites
 Backing up a single site from a multisite is not possible, however backing up an entire multisite is. Remember to replace the domain of each site in the database.

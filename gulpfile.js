@@ -1,24 +1,25 @@
-const gulp = require('gulp');
-const mysqlDump = require('mysqldump');
-const datetime = require('node-datetime');
-const dt = datetime.create();
-const mkdirp = require('mkdirp');
-const gulpSequence = require('gulp-sequence');
-const replace = require('gulp-replace');
-const del = require('del');
-const fs = require('fs');
-const zip = require('gulp-zip');
-const gzip = require('gulp-gzip');
-const tar = require('gulp-tar');
 const _ = require('underscore');
-const inquirer = require('inquirer');
-const glob = require("glob");
+const argv = require('yargs').argv;
 const colors = require("colors");
+const datetime = require('node-datetime');
+const del = require('del');
+const dt = datetime.create();
 const exec = require("exec");
+const fs = require('fs');
+const glob = require("glob");
+const gulp = require('gulp');
+const gulpSequence = require('gulp-sequence');
+const gzip = require('gulp-gzip');
+const inquirer = require('inquirer');
+const mkdirp = require('mkdirp');
+const mysqlDump = require('mysqldump');
+const replace = require('gulp-replace');
+const tar = require('gulp-tar');
+const zip = require('gulp-zip');
 
 const dir = dt.format('m-d-y_H.M.S');
 let packageJson = JSON.parse(fs.readFileSync('./package.json'));
-const options = packageJson.gwb;
+const options = !!argv.options ? packageJson[argv.options] : packageJson.gwb;
 
 RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -98,16 +99,20 @@ gulp.task('dumpDatabase', () => {
  * Replace strings in sql dump
  */
 gulp.task('replaceStrings', () => {
+    let replaceRegExp = [];
     const dumpPath = './' + dir + '/tmp/database.sql';
 
-    if (options.replace.length > 0 && options.replace != false) {
-        options.replace = options.replace.map((item) => {
-            return [item[0], item[1]];
-        });
+    if (options.replace != false) {
+        replaceRegExp = new RegExp(Object.keys(options.replace).join('|'),'gi');
     }
 
     return gulp.src([dumpPath])
-        .pipe(replace(options.replace))
+        .pipe(
+            replace(
+                replaceRegExp,
+                (match) => options.replace[match]
+            )
+        )
         .pipe(
             replace(
                 /(CREATE TABLE IF NOT EXISTS `)(.[^_])_(\S+)/gi,
