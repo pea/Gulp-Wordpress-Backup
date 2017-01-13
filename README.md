@@ -93,8 +93,8 @@ To extract the archive and replace existing files run:
 tar -xvzf files.tar.gz -C .
 ```
 
-Alternatively, create the file `build.sh` in the root with the contents:
+Alternatively, create a file called `build.sh` in the root. Add commands to extract and remove the files archive with:
 ```
 tar -xvzf files.tar.gz -C . && rm ./files.tar.gz && rm ./files.zip
 ```
-Then Give it execution permissions using `chmod +x build.sh`. To run, execute `./build.sh`.
+Then give it execution permissions using `chmod +x build.sh`. To run, execute `./build.sh`.
