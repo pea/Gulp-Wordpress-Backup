@@ -5,9 +5,6 @@
   "main": "gulpfile.js",
   "author": "Peter Bailey (peabay.xyz)",
   "license": "ISC",
-  "scripts": {
-    "upload": "scp 01-14-17_13.05.28/files.tar.gz peter@peterbailey.eu:sinclair.peterbailey.eu && ssh -t peterbailey.eu 'cd sinclair.peterbailey.eu ; bash'"
-  },
    "keywords": [
     "wordpress",
     "gulp",
@@ -16,46 +13,34 @@
     "sql"
   ],
   "gwb": {
-    "wppath": "../Wordpress",
-    "dbhost": "localhost",
-    "dbuser": "wordpress",
-    "dbpass": "wordpress",
-    "dbdatabase": "wordpress",
-    "dbprefix": "wp_",
-    "archiver": "tar.gz",
-    "replace": {
-      "localhost": "sinclair.peabay.xyz"
-    },
-    "include": [
-      "/wp-content"
-    ],
-    "exclude": [
-      "wp-content/themes/**/node_modules",
-      "wp-content/themes/**/vendor"
-    ],
-    "sshUser": "peter",
-    "sshHost": "peterbailey.eu",
-    "sshPath": "sinclair.peterbailey.eu"
+    "wppath": "",
+    "dbhost": "",
+    "dbuser": "",
+    "dbpass": "",
+    "dbdatabase": "",
+    "dbprefix": "",
+    "archiver": "",
+    "replace": {},
+    "include": [],
+    "exclude": [],
+    "sshUser": "",
+    "sshHost": "",
+    "sshPath": ""
   },
   "gwblive": {
-    "wppath": "../Wordpress",
-    "dbhost": "localhost",
-    "dbuser": "wordpress",
-    "dbpass": "wordpress",
-    "dbdatabase": "wordpress",
-    "dbprefix": "wp_",
-    "archiver": "tar.gz",
-    "replace": {
-      "localhost/ellanse": "ellanse.com",
-      "localhost/perfectha": "perfectha.com"
-    },
-    "include": [
-      "/wp-content"
-    ],
-    "exclude": false,
-    "sshUser": "peter",
-    "sshHost": "peterbailey.eu",
-    "sshPath": "sinclair.peterbailey.eu"
+    "wppath": "",
+    "dbhost": "",
+    "dbuser": "",
+    "dbpass": "",
+    "dbdatabase": "",
+    "dbprefix": "",
+    "archiver": "",
+    "replace": {},
+    "include": [],
+    "exclude": [],
+    "sshUser": "",
+    "sshHost": "",
+    "sshPath": ""
   },
   "devDependencies": {},
   "dependencies": {
