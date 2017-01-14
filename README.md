@@ -63,8 +63,7 @@ Configure the `gwb` object in package.json
       "/wp-content"
     ],
     "exclude": [
-        "wp-content/themes/**/node_modules",
-        "wp-content/themes/**/vendor"
+        "wp-content/themes/**/node_modules"
     ],
     "sshUser": "peabay",
     "sshHost": "peabay.xyz",
