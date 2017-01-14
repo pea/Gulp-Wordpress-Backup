@@ -1,12 +1,22 @@
 # Gulp Wordpress Backup
 Gulpfile to backup a Wordpress installation for migration.
 
+- Backup profiles providing alternative options (live/ staging for example)
+- Database Export
+    - String replacement with serialized string length fix
+    - Table prefix replacement
+- File Archiving
+    - Choice of Zip or Tar.gz
+    - Whether to only archive certain directories
+    - Directory exclusion
+    - SSH file upload command generation
+
 ## Installation
 1. Clone to directory outside of Wordpress installation
 2. Execute `npm install`
 
 ## Setup
-Configure gwb in package.json
+Configure the `gwb` object in package.json
 
 ## Settings
 
