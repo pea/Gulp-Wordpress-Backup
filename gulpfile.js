@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const argv = require('yargs').argv;
+const byteLength = require('utf8-byte-length');
 const colors = require("colors");
 const datetime = require('node-datetime');
 const del = require('del');
@@ -16,6 +17,7 @@ const mysqlDump = require('mysqldump');
 const replace = require('gulp-replace');
 const tar = require('gulp-tar');
 const zip = require('gulp-zip');
+const prependFile = require('prepend-file');
 
 const dir = dt.format('m-d-y_H.M.S');
 let packageJson = JSON.parse(fs.readFileSync('./package.json'));
@@ -84,7 +86,8 @@ gulp.task('dumpDatabase', () => {
             user: options.dbuser,
             password: options.dbpass,
             database: options.dbdatabase,
-            dest: dumpPath
+            dest: dumpPath,
+            dropTable: true
         }, (err) => {
             if (err !== null) return reject(err);
             resolve(dumpPath);
@@ -115,26 +118,41 @@ gulp.task('replaceStrings', () => {
         )
         .pipe(
             replace(
+                /s:(.*?):\\"(.*?)\\";/g,
+                (match, p1, p2, p3) => {
+                    const length = byteLength(
+                        p2.replace(/\\"/g, '"')
+                        .replace(/\\n/g, 'n')
+                        .replace(/\\r/g, 'r')
+                        .replace(/\\t/g, 't')
+                    );
+                    if(typeof p2 != 'undefined') {
+                        return `s:${length}:"${p2.replace(/\\"/g, '"')}";`
+                    } else {
+                        return `s:0:"";`
+                    }
+                }
+            )
+        )
+        .pipe(
+            replace(
                 /(CREATE TABLE IF NOT EXISTS `)(.[^_])_(\S+)/gi,
                 'CREATE TABLE IF NOT EXISTS `' + options.dbprefix + '$3'
-                )
             )
+        )
         .pipe(
             replace(
                 /(INSERT INTO `)(.[^_])_(\S+)/gi,
                 'INSERT INTO `' + options.dbprefix + '$3'
             )
         )
-        .pipe(
-            replace(
-                /s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?")/,
-                (match, p1, p2, p3) => typeof p3 != 'undefined' ? `s:${p3.length}:\\"${p3.replace(/"/g, '\\"')}\\"` : `s:0:\\"\\"`
-            )
-        )
         .pipe(gulp.dest('./' + dir));
 });
 
 gulp.task('finalise', () => {
+    // Fix empty-date error
+    prependFile('./' + dir + '/database.sql', "SET sql_mode = '';\n\n");
+
     // Report to console
     console.log('Database: '.yellow, `${dir}/database.sql`.green);
     console.log('Files: '.yellow, `${dir}/files.${options.archiver}`.green);
@@ -152,7 +170,6 @@ gulp.task('finalise', () => {
             }
         );
     }
-
 });
 
 /**
