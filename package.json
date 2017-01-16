@@ -4,6 +4,9 @@
   "description": "Painless Wordpress backup with Node.js",
   "main": "gulpfile.js",
   "author": "Peter Bailey (peabay.xyz)",
+  "scripts": {
+    "upload": ""
+  },
   "license": "ISC",
    "keywords": [
     "wordpress",
