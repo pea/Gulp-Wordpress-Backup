@@ -107,3 +107,7 @@ Alternatively, create a file called `build.sh` in the root. Add commands to extr
 tar -xvzf files.tar.gz -C . && rm ./files.tar.gz && rm ./files.zip
 ```
 Then give it execution permissions using `chmod +x build.sh`. To run, execute `./build.sh`.
+
+To download the database or files from the server after generating a backup there execute:
+
+scp username@host.com:Exports/02-15-17_17.57.39/files.tar.gz ~/Desktop
