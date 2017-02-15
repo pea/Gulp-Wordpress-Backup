@@ -1,6 +1,6 @@
 {
   "name": "gulp-wordpress-backup",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Painless Wordpress backup with Node.js",
   "main": "gulpfile.js",
   "author": "Peter Bailey (peabay.xyz)",
