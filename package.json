@@ -16,7 +16,7 @@
     "sql"
   ],
   "gwb": {
-    default: {
+    "default": {
       "wppath": "",
       "dbhost": "",
       "dbuser": "",
