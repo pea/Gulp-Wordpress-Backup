@@ -17,31 +17,18 @@
   ],
   "gwb": {
     "default": {
-      "wppath": "",
-      "dbhost": "",
-      "dbuser": "",
-      "dbpass": "",
-      "dbdatabase": "",
-      "dbprefix": "",
-      "archiver": "",
+      "wppath": "../Wordpress",
+      "dbhost": "localhost",
+      "dbuser": "wordpress",
+      "dbpass": "wordpress",
+      "dbdatabase": "wordpress",
+      "dbprefix": "wp_",
+      "archiver": "tar.gz",
       "replace": {},
       "include": [],
-      "exclude": [],
-      "sshUser": "",
-      "sshHost": "",
-      "sshPath": ""
-    },
-    "gwblive": {
-      "wppath": "",
-      "dbhost": "",
-      "dbuser": "",
-      "dbpass": "",
-      "dbdatabase": "",
-      "dbprefix": "",
-      "archiver": "",
-      "replace": {},
-      "include": [],
-      "exclude": [],
+      "exclude": [
+        "wp-content/themes/**/node_modules"
+      ],
       "sshUser": "",
       "sshHost": "",
       "sshPath": ""
