@@ -42,7 +42,7 @@ gulp.task('setup', () => {
 gulp.task('archiveFiles', () => {
     let srcFiles = [options.wppath + '/**', options.wppath + '/**/.*'];
 
-    if (!!options.include) {
+    if (options.include.length > 0) {
         srcFiles = [];
         _.each(options.include, (item) => {
             srcFiles.push(
@@ -51,7 +51,7 @@ gulp.task('archiveFiles', () => {
         });
     }
 
-    if (!!options.exclude) {
+    if (options.exclude.length > 0) {
         _.each(options.exclude, (item) => {
             srcFiles.push(
                 '!' + options.wppath + item,
