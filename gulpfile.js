@@ -118,7 +118,7 @@ gulp.task('replaceStrings', () => {
         )
         .pipe(
             replace(
-                /s:(.*?):\\"(.*?)\\";/g,
+                /s:([0-9]+):\\"(.*?)\\";/g,
                 (match, p1, p2, p3) => {
                     const length = byteLength(
                         p2.replace(/\\"/g, '"')
