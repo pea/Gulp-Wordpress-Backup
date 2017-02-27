@@ -21,7 +21,7 @@ const prependFile = require('prepend-file');
 
 const dir = dt.format('m-d-y_H.M.S');
 let packageJson = JSON.parse(fs.readFileSync('./package.json'));
-const options = !!argv.options ? packageJson[argv.options] : packageJson.gwb.default;
+const options = !!argv.options ? packageJson.gwb[argv.options] : packageJson.gwb.default;
 
 RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
