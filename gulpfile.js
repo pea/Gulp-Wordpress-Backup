@@ -126,6 +126,9 @@ gulp.task('replaceStrings', () => {
                         .replace(/\\n/g, 'n')
                         .replace(/\\r/g, 'r')
                         .replace(/\\t/g, 't')
+                        .replace(/\\0/g, '0')
+                        .replace(/\\x1a/g, '1')
+                        .replace(/\\Z/g, 'Z')
                     );
                     if(typeof p2 != 'undefined') {
                         return `s:${length}:"${p2.replace(/\\"/g, '"')}";`
