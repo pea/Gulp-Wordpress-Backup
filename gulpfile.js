@@ -164,6 +164,7 @@ gulp.task('finalise', () => {
     // Write upload command to package.json
     if (!!options.sshUser && !!options.sshHost && !!options.sshPath) {
         packageJson.scripts.upload = `scp ${dir}/files.${options.archiver} ${options.sshUser}@${options.sshHost}:${options.sshPath}`;
+        packageJson.scripts.upload += ` && scp ${dir}/database.sql ${options.sshUser}@${options.sshHost}:${options.sshPath}`;
         packageJson.scripts.upload += ` && ssh -t ${options.sshHost} 'cd ${options.sshPath} ; bash'`;
         fs.writeFile(
             './package.json', 
