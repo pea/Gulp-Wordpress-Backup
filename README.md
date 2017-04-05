@@ -67,7 +67,7 @@ Configure the `gwb` object in package.json
     ],
     "sshUser": "peabay",
     "sshHost": "peabay.xyz",
-    "sshPath": "peabay.xyz/Wordpress"
+    "sshPath": "/var/www/html/peabay.xyz"
 }
 ```
 
