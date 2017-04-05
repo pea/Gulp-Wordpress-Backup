@@ -92,22 +92,41 @@ Use the `--options` flag to specify the object key of alternative options. Witho
 Backing up a single site from a multisite is not possible, however backing up an entire multisite is. Remember to replace the domain of each site in the database.
 
 ## Restoring Files
-If SSH details are provided the script will generate a command in package.json to upload the archived files and SSH you into the server. To execute this command run:
+If SSH details are provided the script will generate a command in package.json to upload the backup and SSH you into the server. To execute this command run:
 ```ssh
 node run upload
 ```
 
-To extract the archive and replace existing files run:
-```ssh
-tar -xvzf files.tar.gz -C .
-```
+## Extracting and Importing
+- Exract the files archive with `tar -xvzf files.tar.gz -C .`
+- Import the database with `mysql -u username -p -h localhost <database name> < database.sql`
 
-Alternatively, create a file called `build.sh` in the root. Add commands to extract and remove the files archive with:
+Alternatively you can create a bash script to do this for you.
+
+- Have the files uploaded outside of the Wordpress installation.
+- Creat a file called import.sh in the same location.
+- Give import.sh execution permissions with `chmod +x build.sh`.
+- In import.sh insert the following (edit public_html directory name if different) and execute `./import.sh` to run script.
+
+```ssh
+#!/bin/bash
+
+# Extract and delete files.tar.gz
+if [ -f ./files.tar.gz ]; then
+    tar -xvzf files.tar.gz -C ./public_html && rm ./files.tar.gz
+fi
+
+# Extract and delete files.zip
+if [ -f ./files.zip ]; then
+    tar -xvzf files.zip -C ./public_html && rm ./files.zip
+fi
+
+# Import and delete database.sql 
+if [ -f ./database.sql ]; then
+    mysql -u <database username> -p'<database password>' -h localhost <database name> < database.sql
+fi
 ```
-tar -xvzf files.tar.gz -C . && rm ./files.tar.gz && rm ./files.zip
-```
-Then give it execution permissions using `chmod +x build.sh`. To run, execute `./build.sh`.
 
 To download the database or files from the server after generating a backup there execute:
 
-scp username@host.com:Exports/02-15-17_17.57.39/files.tar.gz ~/Desktop
+`scp username@host.com:Exports/02-15-17_17.57.39/files.tar.gz ~/Desktop`
