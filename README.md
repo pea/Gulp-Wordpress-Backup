@@ -101,11 +101,13 @@ node run upload
 - Exract the files archive with `tar -xvzf files.tar.gz -C .`
 - Import the database with `mysql -u username -p -h localhost <database name> < database.sql`
 
+### Import Script
+
 Alternatively you can create a bash script to do this for you.
 
 - Have the files uploaded outside of the Wordpress installation.
 - Creat a file called import.sh in the same location.
-- Give import.sh execution permissions with `chmod +x build.sh`.
+- Give import.sh execution permissions with `chmod +x import.sh`.
 - In import.sh insert the following (edit public_html directory name if different) and execute `./import.sh` to run script.
 
 ```ssh
