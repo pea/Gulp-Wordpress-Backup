@@ -125,7 +125,7 @@ fi
 
 # Import and delete database.sql 
 if [ -f ./database.sql ]; then
-    mysql -u <database username> -p'<database password>' -h localhost <database name> < database.sql
+    mysql -u <database username> -p'<database password>' -h localhost <database name> < database.sql && rm ./database.sql
 fi
 ```
 
