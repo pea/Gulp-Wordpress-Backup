@@ -21,7 +21,7 @@ const prependFile = require('prepend-file');
 
 const dir = dt.format('m-d-y_H.M.S');
 let packageJson = JSON.parse(fs.readFileSync('./package.json'));
-const options = !!argv.options ? packageJson[argv.options] : packageJson.gwb.default;
+const options = !!argv.options ? packageJson.gwb[argv.options] : packageJson.gwb.default;
 
 RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -126,6 +126,9 @@ gulp.task('replaceStrings', () => {
                         .replace(/\\n/g, 'n')
                         .replace(/\\r/g, 'r')
                         .replace(/\\t/g, 't')
+                        .replace(/\\0/g, '0')
+                        .replace(/\\x1a/g, '1')
+                        .replace(/\\Z/g, 'Z')
                     );
                     if(typeof p2 != 'undefined') {
                         return `s:${length}:"${p2.replace(/\\"/g, '"')}";`
@@ -161,6 +164,7 @@ gulp.task('finalise', () => {
     // Write upload command to package.json
     if (!!options.sshUser && !!options.sshHost && !!options.sshPath) {
         packageJson.scripts.upload = `scp ${dir}/files.${options.archiver} ${options.sshUser}@${options.sshHost}:${options.sshPath}`;
+        packageJson.scripts.upload += ` && scp ${dir}/database.sql ${options.sshUser}@${options.sshHost}:${options.sshPath}`;
         packageJson.scripts.upload += ` && ssh -t ${options.sshHost} 'cd ${options.sshPath} ; bash'`;
         fs.writeFile(
             './package.json', 
